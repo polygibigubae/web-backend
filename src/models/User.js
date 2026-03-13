@@ -19,12 +19,68 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING(255),
     allowNull: false
   },
-  firstName: {
+  fullName: {
+    type: DataTypes.STRING(255),
+    allowNull: false
+  },
+  phoneNumber: {
+    type: DataTypes.STRING(20),
+    allowNull: false
+  },
+  woredaOfOrigin: {
+    type: DataTypes.STRING(100),
+    allowNull: true
+  },
+  zoneOfOrigin: {
+    type: DataTypes.STRING(100),
+    allowNull: true
+  },
+  batchAndDepartment: {
+    type: DataTypes.STRING(255),
+    allowNull: false
+  },
+  familyNumber: {
     type: DataTypes.STRING(100),
     allowNull: false
   },
-  lastName: {
+  gibiGubaeServiceLevel: {
     type: DataTypes.STRING(100),
+    allowNull: false
+  },
+  attendedProgram: {
+    type: DataTypes.STRING(255),
+    allowNull: false
+  },
+  reasonForNotParticipating: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  programImprovementSuggestions: {
+    type: DataTypes.TEXT,
+    allowNull: false
+  },
+  learnedInSundaySchool: {
+    type: DataTypes.STRING(100),
+    allowNull: false
+  },
+  sundaySchoolLevel: {
+    type: DataTypes.STRING(100),
+    allowNull: true
+  },
+  servedInSundaySchool: {
+    type: DataTypes.STRING(100),
+    allowNull: false
+  },
+  sundaySchoolServiceDepartment: {
+    type: DataTypes.STRING(255),
+    allowNull: true
+  },
+  departmentToServeInGibiGubae: {
+    type: DataTypes.STRING(255),
+    allowNull: true
+  },
+  feedbackOnFamilyStructure: {
+    type: DataTypes.TEXT,
     allowNull: false
   },
   role: {

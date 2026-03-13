@@ -3,7 +3,13 @@ import User from '../../models/User.js';
 import { generateToken } from '../../utils/token.js';
 
 export const signup = async (userData) => {
-  const { email, password, firstName, lastName, role = 'Guest' } = userData;
+  const { 
+    email, password, fullName, phoneNumber, woredaOfOrigin, zoneOfOrigin,
+    batchAndDepartment, familyNumber, gibiGubaeServiceLevel, attendedProgram,
+    reasonForNotParticipating, programImprovementSuggestions, learnedInSundaySchool,
+    sundaySchoolLevel, servedInSundaySchool, sundaySchoolServiceDepartment,
+    departmentToServeInGibiGubae, feedbackOnFamilyStructure, role = 'Guest' 
+  } = userData;
 
   // Check if user already exists
   const existingUser = await User.findOne({ where: { email } });
@@ -19,8 +25,22 @@ export const signup = async (userData) => {
   const user = await User.create({
     email,
     password: hashedPassword,
-    firstName,
-    lastName,
+    fullName,
+    phoneNumber,
+    woredaOfOrigin,
+    zoneOfOrigin,
+    batchAndDepartment,
+    familyNumber,
+    gibiGubaeServiceLevel,
+    attendedProgram,
+    reasonForNotParticipating,
+    programImprovementSuggestions,
+    learnedInSundaySchool,
+    sundaySchoolLevel,
+    servedInSundaySchool,
+    sundaySchoolServiceDepartment,
+    departmentToServeInGibiGubae,
+    feedbackOnFamilyStructure,
     role
   });
 
