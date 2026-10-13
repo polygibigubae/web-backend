@@ -1,338 +1,208 @@
-# Spiritual Website Backend
+# Gubaie — Spiritual Community Web Platform
 
-A comprehensive backend system for a spiritual website with role-based authentication, membership management, and admin approval system.
+A full-stack web application for a spiritual community, featuring member registration, role-based authentication, multilingual support (English & Amharic), and a dedicated spiritual content hub ("Mary's Joy").
 
-## Features
+---
 
-- **Role-Based Authentication**: Four roles (Super Admin, Admin, Member, Guest)
-- **User Registration & Login**: Secure signup and login with JWT tokens
-- **Password Security**: Bcrypt hashing for password storage
-- **Membership Management**: Digital membership form submission for Members
-- **Admin Approval System**: Admins can approve or reject membership applications
-- **Role Management**: APIs for managing user roles and status
-- **MySQL Database**: Using Sequelize ORM for database operations
-- **ES Modules**: Modern JavaScript with ES module syntax
+## 🗂️ Project Structure
 
-## Tech Stack
+```
+gubaie/
+├── gub_back/          # Express.js REST API (Node.js backend)
+│   ├── src/
+│   │   ├── app.js             # Express app setup, middleware, route mounting
+│   │   ├── server.js          # DB connection, port-retry, server start
+│   │   ├── config/            # env.js, db.js (Sequelize + MySQL)
+│   │   ├── middleware/        # auth, error, role middleware
+│   │   ├── models/            # User, Membership, Event, Announcement
+│   │   ├── modules/
+│   │   │   ├── auth/          # signup, login, profile routes + JWT
+│   │   │   ├── members/       # member registration + listing
+│   │   │   ├── roles/         # role management
+│   │   │   ├── events/        # (scaffolded)
+│   │   │   └── announcements/ # (scaffolded)
+│   │   └── utils/
+│   └── docs/                  # api-spec.md, architecture.md, database-schema.md
+│
+└── gub_front/
+    └── web-frontend/          # React 19 + Vite + TailwindCSS 4 frontend
+        └── src/
+            ├── App.jsx                # BrowserRouter + all page routes
+            ├── i18n.js                # i18next setup
+            ├── locales/en/ & am/      # English & Amharic translations
+            ├── context/               # React context (auth state etc.)
+            ├── components/            # Shared + page-level UI components
+            ├── modules/
+            │   ├── auth/              # Login/Signup pages + services
+            │   ├── members/           # Member registration + listing
+            │   ├── events/            # (scaffolded)
+            │   └── announcements/     # (scaffolded)
+            ├── routes/                # Route config
+            └── utils/
+```
 
-- **Node.js** with Express.js
-- **MySQL** with Sequelize ORM
-- **JWT** for authentication
-- **Bcryptjs** for password hashing
-- **ES Modules** for modern JavaScript
+---
 
-## Installation
+## ✅ What Has Been Done
 
-1. Install dependencies:
+### Backend (`gub_back`)
+
+| Area                 | Status        | Details                                                                                                                            |
+| -------------------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| Project Setup        | ✅ Done       | Express 5, ES Modules, nodemon dev server                                                                                          |
+| Database Config      | ✅ Done       | MySQL via Sequelize ORM, auto-sync on startup                                                                                      |
+| Port Management      | ✅ Done       | Auto-retry on EADDRINUSE (up to 20 ports)                                                                                          |
+| **Auth Module**      | ✅ Done       | `POST /api/auth/signup`, `POST /api/auth/login`, `GET /api/auth/profile`                                                           |
+| JWT Authentication   | ✅ Done       | `auth.middleware.js` — Bearer token verification                                                                                   |
+| Role Middleware      | ✅ Done       | `role.middleware.js` — role-based access control                                                                                   |
+| **User Model**       | ✅ Done       | UUID PK, email, password (hashed via bcryptjs), firstName, lastName, role (`Super Admin` / `Admin` / `Member` / `Guest`), isActive |
+| **Membership Model** | ✅ Done       | Full registration fields: woreda, zone, batchDept, family, programAttending, sundaySchool history, departmentToServe               |
+| **Members Module**   | ✅ Done       | `POST /api/members/register`, `GET /api/members/`                                                                                  |
+| **Roles Module**     | ✅ Done       | Role CRUD routes                                                                                                                   |
+| Input Validation     | ✅ Done       | Joi schemas (`auth.validation.js`, `member.validation.js`)                                                                         |
+| Error Handling       | ✅ Done       | Centralized `errorHandler` + `notFoundHandler` middleware                                                                          |
+| Health Check         | ✅ Done       | `GET /health` endpoint                                                                                                             |
+| Event Model          | 🔶 Scaffolded | Model created, routes/controller not yet wired to app                                                                              |
+| Announcement Model   | 🔶 Scaffolded | Model created, routes/controller not yet wired to app                                                                              |
+| Documentation        | ✅ Done       | `docs/api-spec.md`, `docs/architecture.md`, `docs/database-schema.md`                                                              |
+| Git                  | ✅ Done       | Pushed to `github.com/polygibigubae/web-backend` with individual file commits                                                      |
+
+---
+
+### Frontend (`gub_front/web-frontend`)
+
+| Area                      | Status        | Details                                                                                            |
+| ------------------------- | ------------- | -------------------------------------------------------------------------------------------------- |
+| Project Setup             | ✅ Done       | React 19, Vite 7, TailwindCSS 4, ESLint                                                            |
+| Routing                   | ✅ Done       | React Router v7 — all pages wired in `App.jsx`                                                     |
+| Internationalisation      | ✅ Done       | i18next + `i18next-browser-languagedetector` — English (`en`) & Amharic (`am`) locales             |
+| Animations                | ✅ Done       | Framer Motion integrated                                                                           |
+| **Header / Navbar**       | ✅ Done       | Full responsive header (`Header.jsx` — 16 KB)                                                      |
+| **Footer**                | ✅ Done       | Footer component (`Footer.jsx`)                                                                    |
+| **Home Page**             | ✅ Done       | Hero, FeaturesSection, StatsSection, HighlightSection, TopicCards, JoinSection, TestimonialSection |
+| **About Page**            | ✅ Done       | Full about page (`About.jsx` — 16 KB)                                                              |
+| **FAQ Page**              | ✅ Done       | FAQ component with expandable Q&A                                                                  |
+| **Login Page**            | ✅ Done       | Form UI + `auth` module service                                                                    |
+| **Signup Page**           | ✅ Done       | Form UI + `auth` module service                                                                    |
+| **Member Registration**   | ✅ Done       | Full detailed registration form (`Registration.jsx` — 18 KB)                                       |
+| **User Profile**          | ✅ Done       | Profile page (`Profile.jsx`)                                                                       |
+| **Mary's Joy — Articles** | ✅ Done       | `SpiritualArticles.jsx` at `/marys-joy/articles`                                                   |
+| **Mary's Joy — Games**    | ✅ Done       | `SpiritualGames.jsx` at `/marys-joy/games`                                                         |
+| **Mary's Joy — Q&A**      | ✅ Done       | `ContactQA.jsx` at `/marys-joy/qa`                                                                 |
+| Auth Context              | ✅ Done       | `context/` folder in place for global auth state                                                   |
+| Members Module (FE)       | ✅ Done       | Pages, components, and services scaffolded                                                         |
+| Events Module (FE)        | 🔶 Scaffolded | Folder structure exists, UI not yet built                                                          |
+| Announcements Module (FE) | 🔶 Scaffolded | Folder structure exists, UI not yet built                                                          |
+| Git                       | ✅ Done       | Pushed to `github.com/polygibigubae/web-frontend` with individual file commits                     |
+
+---
+
+## 🔜 What To Do Next
+
+### 🔴 High Priority
+
+#### Backend
+
+- [ ] **Wire Events & Announcements routes** — Mount `eventRoutes` and `announcementRoutes` into `app.js` (mirrors the existing auth/member pattern)
+- [ ] **Protect Member routes** — Add `authenticate` middleware to `GET /api/members/` so only logged-in users can list members
+- [ ] **Role-based guards** — Apply `role.middleware.js` to admin-only routes (e.g., deleting members, managing roles)
+- [ ] **Password reset flow** — `POST /api/auth/forgot-password` and `POST /api/auth/reset-password` with email token
+- [ ] **File / image upload** — Profile photo upload using `multer` (stored locally or cloud bucket)
+
+#### Frontend
+
+- [ ] **Connect Login/Signup to backend** — Wire `auth` service calls to `/api/auth/login` and `/api/auth/signup`; store JWT in `localStorage` / auth context
+- [ ] **Auth Context implementation** — Complete `context/` to expose `user`, `token`, `login()`, `logout()` to the whole app
+- [ ] **Protected routes** — Wrap `/profile`, `/register`, and admin pages in a `<ProtectedRoute>` component
+- [ ] **Connect Registration form to backend** — Wire `Registration.jsx` form submit to `POST /api/members/register`
+- [ ] **Connect Profile page to backend** — Fetch user data from `GET /api/auth/profile`
+
+---
+
+### 🟡 Medium Priority
+
+#### Backend
+
+- [ ] **Events CRUD** — Complete controller + service for creating, listing, updating, deleting events
+- [ ] **Announcements CRUD** — Complete controller + service for announcements
+- [ ] **Pagination** — Add `page` + `limit` query params to `GET /api/members/` and future list endpoints
+- [ ] **Search & Filtering** — Filter members by family, zone, role, batchDept
+- [ ] **Rate limiting** — Add `express-rate-limit` to auth routes to prevent brute-force
+- [ ] **CORS hardening** — Restrict `cors()` to the production frontend origin only
+- [ ] **Logging** — Integrate `morgan` for HTTP request logging in development and production
+
+#### Frontend
+
+- [ ] **Events UI** — Build pages and components inside `modules/events/` (list, detail, create form for admins)
+- [ ] **Announcements UI** — Build pages and components inside `modules/announcements/`
+- [ ] **Admin Dashboard** — Role-gated dashboard for `Admin` / `Super Admin` users: member list, event management, announcements
+- [ ] **Amharic Translations** — Complete all missing keys in `locales/am/` (currently partially filled)
+- [ ] **Toast / Alert System** — Replace `console.log` error handling in forms with user-visible toast notifications
+- [ ] **Form Validation (FE)** — Add client-side validation feedback (field errors, character counters)
+
+---
+
+### 🟢 Nice to Have / Future
+
+#### Backend
+
+- [ ] **Refresh tokens** — Implement refresh token rotation for persistent sessions
+- [ ] **Email service** — Send welcome email on signup using `nodemailer` or a transactional email provider
+- [ ] **Unit & integration tests** — Add Jest/Supertest test suite for all routes
+- [ ] **Docker** — Containerise backend + MySQL for consistent local setup and deployment
+- [ ] **CI/CD** — GitHub Actions pipeline for linting, testing, and deployment
+
+#### Frontend
+
+- [ ] **Dark mode** — Toggle dark/light theme, respect system preference
+- [ ] **PWA support** — Service worker + web manifest for offline capability
+- [ ] **SEO** — Add `<meta>` descriptions, Open Graph tags, and page-level `<title>` updates
+- [ ] **Accessibility (a11y)** — Audit with axe/Lighthouse; ensure keyboard navigation and screen reader support
+- [ ] **End-to-end tests** — Playwright or Cypress test suite covering the main user flows
+
+---
+
+## 🛠️ Technology Stack
+
+| Layer           | Technology                                                      |
+| --------------- | --------------------------------------------------------------- |
+| **Frontend**    | React 19, Vite 7, TailwindCSS 4, Framer Motion, React Router v7 |
+| **i18n**        | i18next, react-i18next, i18next-browser-languagedetector        |
+| **HTTP Client** | Axios                                                           |
+| **Backend**     | Node.js, Express 5 (ES Modules)                                 |
+| **ORM / DB**    | Sequelize 6, MySQL2, MySQL                                      |
+| **Auth**        | JWT (`jsonwebtoken`), bcryptjs                                  |
+| **Validation**  | Joi                                                             |
+| **Dev Tools**   | nodemon, ESLint, Vite HMR                                       |
+
+---
+
+## 🚀 Local Development
+
+### Backend
+
 ```bash
+cd gub_back
+cp .env.example .env      # fill in DB_HOST, DB_USER, DB_PASS, DB_NAME, JWT_SECRET, PORT
 npm install
+npm run dev               # starts with nodemon on PORT (default 5000)
 ```
 
-2. Create a `.env` file in the root directory (use `.env.example` as reference):
-```env
-DB_HOST=localhost
-DB_PORT=3306
-DB_NAME=spiritual_website
-DB_USER=root
-DB_PASSWORD=your_password
+### Frontend
 
-JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
-JWT_EXPIRES_IN=7d
-
-PORT=3000
-NODE_ENV=development
-```
-
-3. Create the MySQL database:
-```sql
-CREATE DATABASE spiritual_website;
-```
-
-4. Start the server:
 ```bash
-npm start
+cd gub_front/web-frontend
+npm install
+npm run dev               # starts Vite dev server (default http://localhost:5173)
 ```
 
-For development with auto-reload:
-```bash
-npm run dev
-```
+> Make sure the backend is running first so the frontend can reach the API.
 
-## API Endpoints
+---
 
-### Authentication
+## 🌐 Repositories
 
-#### POST `/api/auth/signup`
-Register a new user.
-
-**Request Body:**
-```json
-{
-  "email": "user@example.com",
-  "password": "password123",
-  "firstName": "John",
-  "lastName": "Doe"
-}
-```
-
-**Response:**
-```json
-{
-  "success": true,
-  "message": "User registered successfully",
-  "data": {
-    "user": {
-      "id": 1,
-      "email": "user@example.com",
-      "firstName": "John",
-      "lastName": "Doe",
-      "role": "Guest",
-      "isActive": true
-    },
-    "token": "jwt_token_here"
-  }
-}
-```
-
-#### POST `/api/auth/login`
-Login with email and password.
-
-**Request Body:**
-```json
-{
-  "email": "user@example.com",
-  "password": "password123"
-}
-```
-
-**Response:**
-```json
-{
-  "success": true,
-  "message": "Login successful",
-  "data": {
-    "user": {
-      "id": 1,
-      "email": "user@example.com",
-      "firstName": "John",
-      "lastName": "Doe",
-      "role": "Guest"
-    },
-    "token": "jwt_token_here"
-  }
-}
-```
-
-#### GET `/api/auth/profile`
-Get current user profile (requires authentication).
-
-**Headers:**
-```
-Authorization: Bearer <token>
-```
-
-### Membership
-
-#### POST `/api/members/submit`
-Submit a membership form (requires Member role or higher).
-
-**Headers:**
-```
-Authorization: Bearer <token>
-```
-
-**Request Body:**
-```json
-{
-  "phoneNumber": "+1234567890",
-  "address": "123 Main St, City, State",
-  "dateOfBirth": "1990-01-01",
-  "occupation": "Software Developer",
-  "spiritualBackground": "Background information",
-  "reasonForJoining": "Reason for joining",
-  "additionalInfo": "Any additional information"
-}
-```
-
-#### GET `/api/members/my-membership`
-Get current user's membership application (requires authentication).
-
-**Headers:**
-```
-Authorization: Bearer <token>
-```
-
-#### GET `/api/members/all`
-Get all membership applications (requires Admin or Super Admin).
-
-**Headers:**
-```
-Authorization: Bearer <token>
-```
-
-**Query Parameters:**
-- `status`: Filter by status (pending, approved, rejected)
-- `page`: Page number (default: 1)
-- `limit`: Items per page (default: 10)
-
-#### POST `/api/members/:id/approve`
-Approve a membership application (requires Admin or Super Admin).
-
-**Headers:**
-```
-Authorization: Bearer <token>
-```
-
-#### POST `/api/members/:id/reject`
-Reject a membership application (requires Admin or Super Admin).
-
-**Headers:**
-```
-Authorization: Bearer <token>
-```
-
-**Request Body:**
-```json
-{
-  "rejectionReason": "Reason for rejection (optional)"
-}
-```
-
-### Role Management
-
-#### GET `/api/roles/users`
-Get all users with pagination and filters (requires Admin or Super Admin).
-
-**Headers:**
-```
-Authorization: Bearer <token>
-```
-
-**Query Parameters:**
-- `role`: Filter by role (Super Admin, Admin, Member, Guest)
-- `isActive`: Filter by active status (true/false)
-- `search`: Search by email, first name, or last name
-- `page`: Page number (default: 1)
-- `limit`: Items per page (default: 10)
-
-#### GET `/api/roles/users/:id`
-Get user by ID (requires Admin or Super Admin).
-
-**Headers:**
-```
-Authorization: Bearer <token>
-```
-
-#### PATCH `/api/roles/users/:id/role`
-Update user role (requires Admin or Super Admin).
-
-**Headers:**
-```
-Authorization: Bearer <token>
-```
-
-**Request Body:**
-```json
-{
-  "role": "Member"
-}
-```
-
-**Note:** Admins cannot assign Super Admin or Admin roles. Only Super Admins can.
-
-#### PATCH `/api/roles/users/:id/status`
-Activate or deactivate a user (requires Admin or Super Admin).
-
-**Headers:**
-```
-Authorization: Bearer <token>
-```
-
-**Request Body:**
-```json
-{
-  "isActive": true
-}
-```
-
-## Roles and Permissions
-
-### Super Admin
-- Full access to all endpoints
-- Can assign any role (including Super Admin and Admin)
-- Can manage all users and memberships
-
-### Admin
-- Can manage memberships (approve/reject)
-- Can view all users
-- Can assign Member or Guest roles only
-- Cannot assign Super Admin or Admin roles
-
-### Member
-- Can submit membership form
-- Can view own membership status
-- Cannot access admin functions
-
-### Guest
-- Can register and login
-- Cannot submit membership form
-- Cannot access admin functions
-
-## Database Models
-
-### User
-- `id`: Primary key
-- `email`: Unique email address
-- `password`: Hashed password
-- `firstName`: User's first name
-- `lastName`: User's last name
-- `role`: Enum (Super Admin, Admin, Member, Guest)
-- `isActive`: Boolean status
-- `createdAt`: Timestamp
-- `updatedAt`: Timestamp
-
-### Membership
-- `id`: Primary key
-- `userId`: Foreign key to User
-- `phoneNumber`: Contact number
-- `address`: Physical address
-- `dateOfBirth`: Date of birth
-- `occupation`: User's occupation
-- `spiritualBackground`: Background information
-- `reasonForJoining`: Reason for joining
-- `additionalInfo`: Additional information
-- `status`: Enum (pending, approved, rejected)
-- `approvedBy`: Foreign key to User (admin who approved)
-- `approvedAt`: Approval timestamp
-- `rejectionReason`: Reason for rejection (if rejected)
-- `createdAt`: Timestamp
-- `updatedAt`: Timestamp
-
-## Error Handling
-
-All errors follow a consistent format:
-
-```json
-{
-  "success": false,
-  "message": "Error message",
-  "errors": [] // Optional array of validation errors
-}
-```
-
-## Security Features
-
-- Passwords are hashed using bcryptjs (10 salt rounds)
-- JWT tokens for stateless authentication
-- Role-based access control middleware
-- Input validation on all endpoints
-- SQL injection protection via Sequelize ORM
-- Password excluded from API responses
-
-## Development
-
-The server runs on port 3000 by default. Make sure MySQL is running and the database is created before starting the server.
-
-## License
-
-ISC
+| Project  | GitHub                                        |
+| -------- | --------------------------------------------- |
+| Backend  | https://github.com/polygibigubae/web-backend  |
+| Frontend | https://github.com/polygibigubae/web-frontend |
